@@ -788,8 +788,11 @@ class TwitchChatDownloader(BaseChatDownloader):
                 'channelLogin': channel
             }
         }]
+        gquery = [{
+            'operationName': 'GlobalBadges',
+        }]
         data = multi_get(self._download_gql(query), 0, 'data') or {}
-
+        data.update(multi_get(self._download_gql(gquery), 0, 'data') or {})
         badges = data.get('badges') or []
         user = multi_get(data, 'user', 'broadcastBadges') or []
         for badge in badges + user:
@@ -841,6 +844,7 @@ class TwitchChatDownloader(BaseChatDownloader):
 
     _OPERATION_HASHES = {
         'ChatList_Badges': '838a7e0b47c09cac05f93ff081a9ff4f876b68f7624f0fc465fe30031e372fc2',
+         'GlobalBadges': '9db27e18d61ee393ccfdec8c7d90f14f9a11266298c2e5eb808550b77d7bcdf6',
         'StreamMetadata': 'b57f9b910f8cd1a4659d894fe7550ccc81ec9052c01e438b290fd66a040b9b93',
         'BrowsePage_Popular': 'fb60a7f9b2fe8f9c9a080f41585bd4564bea9d3030f4d7cb8ab7f9e99b1cee67',
         'ChannelVideoShelvesQuery': 'a30af24ef449ab2e9be4a9c187ef14d294e4ec3041420d219b4c60fc9de7f27c',
